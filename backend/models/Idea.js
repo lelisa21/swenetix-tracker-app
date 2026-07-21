@@ -1,5 +1,17 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const IdeaSchema = new mongoose.Schema({});
+const IdeaSchema = new mongoose.Schema({
+    title:{
+        type:String,
+         required: [String, "Idea title is required"],
+         unique:true
+    },
+    description:{
+     type:String,
+     default:""
+    }
+}, {timestamps:true});
 
-module.exports = mongoose.model("Idea", IdeaSchema);
+const Idea = mongoose.model("Idea", IdeaSchema);
+
+export default Idea
