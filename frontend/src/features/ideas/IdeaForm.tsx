@@ -1,17 +1,17 @@
-import { useState, type MouseEvent } from "react";
+import { useState, type FormEvent } from "react";
 import SubmitButton from "../../components/SubmitButton";
 
 function IdeaForm() {
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
+  const [title, setTitle] = useState<string>('');
+  const [details, setDetails] = useState<string>('');
 
-  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Submitting idea:", { title, details });
   };
 
   return (
-    <form className="idea-form">
+    <form className="idea-form" onSubmit = {handleSubmit}>
       <h2>Submit a new idea</h2>
 
       <label htmlFor="title">Title</label>
@@ -32,7 +32,7 @@ function IdeaForm() {
         rows={4}
       />
 
-      <SubmitButton type="submit" onClick={handleSubmit}>
+      <SubmitButton type="submit">
         Submit idea
       </SubmitButton>
     </form>

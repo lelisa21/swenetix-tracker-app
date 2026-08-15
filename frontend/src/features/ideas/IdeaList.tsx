@@ -16,7 +16,7 @@ function IdeaList({ list }: IdeaListProps) {
       count: renderInfo.count + 1,
       timestamp: Date.now(),
     });
-  }, [renderInfo]);
+  }, [list]);
 
   if (list.length === 0) {
     return (

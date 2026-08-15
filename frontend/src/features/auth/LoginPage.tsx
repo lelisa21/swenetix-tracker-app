@@ -14,12 +14,14 @@ function LoginPage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("")
 
     try {
       setIsLoading(true)
-       const response = await axios.get('/api/auth/login', {
+       const response = await axios.post('/api/auth/login',{email, password}, {
         headers: { 'Content-Type': 'application/json' },    
       })
+      console.log(response.data)
     }catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
