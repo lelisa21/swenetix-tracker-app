@@ -1,20 +1,33 @@
 import { useState, type FormEvent } from "react";
 import SubmitButton from "../../components/SubmitButton";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../app/store";
+import { addIdeaRequested } from "./ideasSlice";
 
 function IdeaForm() {
-  const [title, setTitle] = useState<string>('');
-  const [details, setDetails] = useState<string>('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitting idea:", { title, details });
+
+     dispatch(
+      addIdeaRequested({title, description})
+     )
+    console.log("Submitting idea:", {
+      title,
+      description,
+    });
   };
 
   return (
-    <form className="idea-form" onSubmit = {handleSubmit}>
+    <form className="idea-form" onSubmit={handleSubmit}>
       <h2>Submit a new idea</h2>
 
       <label htmlFor="title">Title</label>
+
       <input
         id="title"
         type="text"
@@ -23,11 +36,12 @@ function IdeaForm() {
         placeholder="e.g. Solar-powered backpack"
       />
 
-      <label htmlFor="details">Description</label>
+      <label htmlFor="description">Description</label>
+
       <textarea
-        id="details"
-        value={details}
-        onChange={(e) => setDetails(e.target.value)}
+        id="description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         placeholder="Describe your idea..."
         rows={4}
       />

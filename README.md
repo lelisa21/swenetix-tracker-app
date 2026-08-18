@@ -68,3 +68,17 @@ Once completed:
 
 - Push your changes to the repository
 - Ensure the project can be installed and run successfully
+
+
+    --bg:#0A0A0C;
+    --bg-nav:#121216;
+    --bg-surface:#1A1A22;
+    --text-primary:#F8FAFC;
+    --text-secondary:#94A3B8;
+    --text-muted:#475569;
+    --hover:#262630;
+    --border:#3F3F46;
+    --accent-gold:#C9974D;     /* brand warmth, CTAs, active states */
+    --accent-gold-dim:#3A2E1C; /* gold at low opacity for fills */
+    --accent-green:#34D399;    /* credit, ready status, vegan tag */
+    --accent-red:#F87171;

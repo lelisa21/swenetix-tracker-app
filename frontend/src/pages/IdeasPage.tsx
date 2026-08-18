@@ -2,23 +2,20 @@ import IdeaForm from '../features/ideas/IdeaForm';
 import IdeaList from '../features/ideas/IdeaList';
 import { useEffect, useState } from 'react';
 import type { IdeaListProps } from '../features/ideas/IdeaList';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../app/store';
 
-function IdeasPage() {
-  const [globalState, setGlobalState] = useState<IdeaListProps>({ list: [] });
-  
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../app/store';
+import { fetchIdeasRequested } from '../features/ideas/ideasSlice';
+
+function IdeasPage() {  
   const dispatch = useDispatch<AppDispatch>();
+  const ideas = useSelector(
+    (state:RootState) => state.ideas.list
+  )
 
-  // this not finished i am just stack with redux i only did one application with it even i did a lot of great app without it,  due to that may be ....
-  const fetchIdeas = async () => {
-// setGlobalState()
-  }
-// useEffect(() => {
-// dispatch(fetchIdeas())
-
-// }, [dispatch])
+  useEffect(() => {
+ dispatch(fetchIdeasRequested())
+  }, [dispatch])
 
   return (
     <div className="app-shell">
@@ -28,7 +25,7 @@ function IdeasPage() {
       </header>
       <main className="app-main">
         <IdeaForm />
-        <IdeaList list={globalState.list} />
+        <IdeaList list={ideas} />
       </main>
     </div>
   );

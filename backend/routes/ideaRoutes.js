@@ -1,13 +1,12 @@
 import express from "express";
 import Idea from "../models/Idea.js";
-import authenticate from "../middleware/authenticate.js";
 const router  = express.Router();
 
 // @route   GET /api/ideas
 router.get("/" ,async (req, res) => {
   try {
     const ideas = await Idea.find();
-    res.json(idea)
+    res.json(ideas)
   } catch (error) {
      res.status(500).json({error:error.message})
   }
