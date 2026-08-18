@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import { call, put, SagaReturnType, takeEvery, takeLatest } from "redux-saga/effects"; // saga effets
-import { Idea } from "./types";
-import { addIdeaFailure, addIdeaRequested, addIdeaSuccess, fetchIdeasFailure, fetchIdeasRequested, fetchIdeasSuccess } from "./ideasSlice";
+import { CreateIdeaInput, Idea } from "./types";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { addIdea, addIdeaRequested, deleteIdeaFailed, deleteideaRequested, deleteIdeaSucceded, fetchIdeasRequested, setIdeas, setIdeasError } from "./ideasSlice";
+import { getIdeas , deleteideas} from "./ideasApi";
 
 // Error message
 function getErrorMessage(error: unknown): string {
@@ -24,41 +25,39 @@ function getErrorMessage(error: unknown): string {
 const API_URL = "/api/ideas";
 
 // API Helpers
-const fetchIdeasAPI = () =>   axios.get<Idea[]>(API_URL);
-const addIdeaAPI = (newIdea: {title:string, description:string}) => axios.post<Idea>(API_URL, newIdea);
+const addIdeaAPI = (newIdea: { title: string, description: string }) => axios.post<Idea>(API_URL, newIdea);
 
-
-function*workFetchIdeas():Generator<unknown, void, SagaReturnType<typeof fetchIdeasAPI>>{
+function* fetchIdeasWorker(): Generator {
   try {
-    const response = yield call(fetchIdeasAPI);
-    yield put(fetchIdeasSuccess(response.data))
+    const ideas = yield call(getIdeas)
+    yield put(setIdeas(ideas))
   } catch (error) {
-    yield put(fetchIdeasFailure(getErrorMessage(error)))
+    yield put(setIdeasError(getErrorMessage(error)))
   }
 }
 
-function* workAddIdea(action: PayloadAction<{title:string, description:string}>):Generator<unknown, void, SagaReturnType<typeof addIdeaAPI>> {
-    console.log("3. ADD WORKER STARTED", action);
+function* workAddIdea(action: PayloadAction<CreateIdeaInput>): Generator<unknown, void, SagaReturnType<typeof addIdeaAPI>> {
+  try {
+    const response = yield call(addIdeaAPI, action.payload)
+    yield put(addIdea(response.data))
+  } catch (error) {
+    yield put(setIdeasError(getErrorMessage(error)))
+  }
+}
 
- try {
-  const response = yield call(addIdeaAPI, action.payload)
-  yield put(addIdeaSuccess(response.data))
-  console.log("API RESPONSE" , response)
- } catch (error) {
-  console.log("5. API ERROR:", error);
-
-  if (axios.isAxiosError(error)) {
-    console.log("STATUS:", error.response?.status);
-    console.log("DATA:", error.response?.data);
+function*deleteIdeasWork(action:PayloadAction<string>):Generator {
+  try {
+  yield call(deleteideas, action.payload);
+  yield put(deleteIdeaSucceded(action.payload))
+  } catch (error) {
+    yield put(deleteIdeaFailed(getErrorMessage(error)))
   }
 
-  yield put(
-    addIdeaFailure(getErrorMessage(error))
-  );
 }
-}
+
 export function* ideasSaga() {
   // yield takeLatest(payload_type, worker_function);
-  yield takeLatest(fetchIdeasRequested.type, workFetchIdeas)
+  yield takeEvery(fetchIdeasRequested.type, fetchIdeasWorker)
   yield takeEvery(addIdeaRequested.type, workAddIdea)
+  yield takeLatest(deleteideaRequested.type, deleteIdeasWork)
 }

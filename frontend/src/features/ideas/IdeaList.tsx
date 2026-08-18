@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Idea } from "./types";
+import { deleteideaRequested } from "./ideasSlice";
+import { useDispatch } from "react-redux";
 
 export interface IdeaListProps {
   list: Idea[];
@@ -10,6 +12,12 @@ function IdeaList({ list }: IdeaListProps) {
     count: 0,
     timestamp: Date.now(),
   });
+
+const dispatch = useDispatch();
+
+  const handleDelete = (id: string) => {
+  dispatch(deleteideaRequested(id));
+};
 
   useEffect(() => {
     setRenderInfo({
@@ -36,6 +44,7 @@ function IdeaList({ list }: IdeaListProps) {
           <li key={idea._id} className="idea-card">
             <h3>{idea.title}</h3>
             <p>{idea.description}</p>
+            <button onClick={() => handleDelete(idea._id)}>Delete</button>
           </li>
         ))}
       </ul>

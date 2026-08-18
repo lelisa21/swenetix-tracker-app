@@ -5,3 +5,9 @@ export interface Idea {
   createdAt?: string;
   updatedAt?: string;
 }
+
+
+export interface CreateIdeaInput {
+  title: string;
+  description: string;
+}
